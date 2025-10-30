@@ -1,0 +1,38 @@
+name: Archive Templates
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:  # allow manual runs
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Archive each top-level folder
+        shell: bash
+        run: |
+          mkdir -p archives
+          for dir in */ ; do
+            # skip common non-template dirs
+            [[ "$dir" == ".github/" ]] && continue
+            [[ "$dir" == "scripts/" ]] && continue
+
+            # trim trailing slash
+            folder="${dir%/}"
+            echo "📦 Archiving $folder..."
+            zip -r "archives/${folder}.zip" "$folder"
+          done
+
+      - name: Upload template archives as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: template-archives
+          path: archives/
+          retention-days: 7
