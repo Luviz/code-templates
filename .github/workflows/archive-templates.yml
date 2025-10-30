@@ -36,3 +36,9 @@ jobs:
           name: template-archives
           path: archives/
           retention-days: 7
+
+      - name: Upload to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: archives/*.zip
