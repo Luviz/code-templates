@@ -1,0 +1,16 @@
+name: Publish Templates
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs: 
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: archives/*.zip

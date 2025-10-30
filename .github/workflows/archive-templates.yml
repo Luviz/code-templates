@@ -23,6 +23,7 @@ jobs:
             # skip common non-template dirs
             [[ "$dir" == ".github/" ]] && continue
             [[ "$dir" == "scripts/" ]] && continue
+            [[ "$dir" == "archives/" ]] && continue
 
             # trim trailing slash
             folder="${dir%/}"
@@ -36,9 +37,3 @@ jobs:
           name: template-archives
           path: archives/
           retention-days: 7
-
-      - name: Upload to GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: archives/*.zip
